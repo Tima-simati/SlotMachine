@@ -2,6 +2,11 @@
 {
     internal class Program
     {
+
+        private static int playOutcome(int a)
+        {
+            return a;
+        }
         static void Main(string[] args)
         {
             /*Design a game where the user can play a make-believe slot machine. The user will be asked to make a wager to play various lines in a 3 x 3 grid. 
@@ -24,9 +29,39 @@
             implement more game modes (multiple lines / diagonals / se above description)
              */
             int playerWallet = 30;
-            int[,] SlotMachineArray = new int[3,3];
+            int rows = 3;
+            int columns = 3;
+            int[,] slotMachineArray = new int[rows, columns];
             const int EARNING_FOR_ONE_LINE = 1;
-
+            int continueGame = 1;
+            int endGame = 0;
+            Random rng = new Random();
+            const int GUESSING_LOWERBOUND = 1;
+            const int GUESSING_UPPERBOUND = 9;
+            while (continueGame == 1)
+            {
+                //filling the slot machine array with new values
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < columns; j++)
+                    {
+                        slotMachineArray[i, j] = rng.Next(GUESSING_LOWERBOUND, GUESSING_UPPERBOUND);
+                    }
+                }
+                //output
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < columns; j++)
+                    {
+                        Console.Write($"{slotMachineArray[i, j]} ");
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine("Do you want to continue?\nType 1 for continue,\ntype 0 to end the game.");
+                continueGame = Convert.ToInt16(Console.ReadLine());
+                 
+            }
+            Console.WriteLine($"Game ended! Your balance is: {playerWallet}");
         }
     }
 }
