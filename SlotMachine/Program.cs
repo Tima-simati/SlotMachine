@@ -21,25 +21,42 @@
             As for the mechanism to determine what the wheels produce per spin, use a random number generating function.
             
             -first think about how you want your slotmachine to work
-            fill array with random numbers
-            output that array
+            *check*fill array with random numbers
+            *check*output that array
             check if middle row is all the same
             output win /lose
             keep track of money
             implement more game modes (multiple lines / diagonals / se above description)
              */
-            int playerWallet = 30;
-            int rows = 3;
-            int columns = 3;
-            int[,] slotMachineArray = new int[rows, columns];
+
+            Console.WriteLine("SLOTMACHINE ARCADE!!!\nYou start with a balance of 30$.\nTry to increase it. Come and Play!");
+            int playerWallet = 30;  //money balance of player
+            int rows = 3;           //rows of array
+            int columns = 3;        //columns of array
+            int[,] slotMachineArray = new int[rows, columns];//array of slotMachine initialized
             const int EARNING_FOR_ONE_LINE = 1;
             int continueGame = 1;
             int endGame = 0;
-            Random rng = new Random();
+            Random rng = new Random(); //declaring boundaries of numbers displayed in slotMachine
             const int GUESSING_LOWERBOUND = 1;
             const int GUESSING_UPPERBOUND = 9;
+            const int BET_ONE = 1;
+            const int BET_THREE = 3;
             while (continueGame == 1)
             {
+                Console.WriteLine("One Game costs 1$. One Game is considered, that only one matching row counts. You win 1$ and your investment.");
+                Console.WriteLine("Would you like to insert 1$ or 3$? for 3$ all lines will be considered. Press 1 or 3");
+                int bet = Convert.ToInt16(Console.ReadKey().KeyChar);
+                //check for wrong input
+                while (bet != BET_ONE || bet != BET_THREE)
+                {
+                    Console.WriteLine("Wrong bet inserted! Only press 1 or 3");
+                    bet = Convert.ToInt16(Console.ReadKey().KeyChar);
+                    if (bet == BET_ONE || bet == BET_THREE)
+                    {
+                        break;
+                    }
+                }
                 //filling the slot machine array with new values
                 for (int i = 0; i < rows; i++)
                 {
@@ -57,9 +74,14 @@
                     }
                     Console.WriteLine();
                 }
+                playerWallet -= bet;
+
                 Console.WriteLine("Do you want to continue?\nType 1 for continue,\ntype 0 to end the game.");
                 continueGame = Convert.ToInt16(Console.ReadLine());
-                 
+
+                
+
+
             }
             Console.WriteLine($"Game ended! Your balance is: {playerWallet}");
         }
