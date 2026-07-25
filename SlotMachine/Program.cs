@@ -50,6 +50,7 @@ namespace SlotMachine
             Console.WriteLine("You also have an option to bet 3$ and all lines will count then. High Risk, Higher Reward!");
             while (continueGame == 1)
             {
+                Console.WriteLine($"Your current balance: {playerWallet}$");
                 Console.WriteLine("Would you like to insert 1$ or 3$? Press 1 or 3");
                 int bet = Convert.ToInt16(Console.ReadLine());
                 //check for wrong input for wager
@@ -112,6 +113,7 @@ namespace SlotMachine
                             {
                                 Console.WriteLine("You Won! One horizontal line was a match.");
                                 playerWallet += EARNING_FOR_ONE_LINE;
+                                winCounter++;
                             }
                             else
                             {
@@ -131,6 +133,7 @@ namespace SlotMachine
                             {
                                 Console.WriteLine("You Won! One vertical line was a match.");
                                 playerWallet += EARNING_FOR_ONE_LINE;
+                                winCounter++;
                             }
                             else
                             {
@@ -148,19 +151,26 @@ namespace SlotMachine
                         {
                             Console.WriteLine("You Won! One diagonal line was a match.");
                             playerWallet += EARNING_FOR_ONE_LINE;
+                            winCounter++;
                         }
                         if (slotMachineArray[0, 2] == slotMachineArray[1, 1] && slotMachineArray[1, 1] == slotMachineArray[2, 0])
                         {
                             Console.WriteLine("You Won! One diagonal line was a match.");
                             playerWallet += EARNING_FOR_ONE_LINE;
+                            winCounter++;
                         }
                         else
                         {
                             Console.WriteLine("You Lose!");
                         }
                     }
-
                 }
+                //giving back wager, if winCounter for 3$ game was more than 0
+                if (winCounter > 0)
+                {
+                    playerWallet += bet;
+                }
+                winCounter = 0; //reset Counter for win to 0
                 //output array to Console
                 for (int i = 0; i < rows; i++)
                 {
