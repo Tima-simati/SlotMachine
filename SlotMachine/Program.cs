@@ -186,7 +186,7 @@ namespace SlotMachine
                     Console.WriteLine("You are out of credits.");
                     break;
                 }
-                //ask user to continue
+                //ask user to continue game
                 Console.WriteLine("Do you want to continue?\nType 1 for continue,\ntype 0 to end the game.");
                 int.TryParse(Console.ReadLine(), out continueGame);
                 if (continueGame == END_GAME)
