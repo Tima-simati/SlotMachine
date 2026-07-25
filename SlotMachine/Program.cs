@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
+using System.Threading.Channels;
 
 namespace SlotMachine
 {
@@ -6,19 +8,19 @@ namespace SlotMachine
     {
         static void Main(string[] args)
         {
-            /*Design a game where the user can play a make-believe slot machine. The user will be asked to make a wager to play various lines in a 3 x 3 grid. 
-             * They can play center line, all three horizontal lines, all vertical lines and diagonals.
-            For instance the user can enter $3 dollars and play all three horizontal lines. If the top line hits a winning combination, they earn $1 dollar for that line.
-
-            rocket Tips: The mention of a grid here should be a dead giveaway that you need a 2D array. 
-            You will also need functionality that can check a horizontal line, a vertical line and a diagonal. 
-            Depending on the number of lines they play, you may need to execute all three of these statements one or multiple times to look for winning lines. 
-            If they are playing three lines, you would call your horizontal line check function three times... one for the top row, one for the center row and one for the bottom row. 
-            Each of these row checking algorithms will then need to look for winning combinations. The result is then dumped into the player’s money total. 
-            As for the mechanism to determine what the wheels produce per spin, use a random number generating function.
-        
-             */
             const int STARTING_CREDITS = 10;
+            const int END_GAME = 0;
+            //declaring boundaries of numbers displayed in slotMachine
+            const int GUESSING_LOWERBOUND = 1;
+            const int GUESSING_UPPERBOUND = 3;
+            const int BET_ONE = 1;     //wager to just play horizontal middle line
+            const int BET_THREE = 3;   //wager to play all three lines
+            const int EARNING_FOR_ONE_LINE = 1;
+            const int CHOOSE_ALL_HORIZONTAL = 1;
+            const int CHOOSE_ALL_VERTICAL = 2;
+            const int CHOOSE_ALL_DIAGONAL = 3;
+            const int CHOOSE_ALL_LINES = 4;
+
             Console.WriteLine($"SLOTMACHINE ARCADE!!!\nYou start with a balance of {STARTING_CREDITS}$.\nCome and Play!");
             int playerWallet = STARTING_CREDITS;  //money balance of player
 
@@ -27,23 +29,10 @@ namespace SlotMachine
             int[,] slotMachineArray = new int[rows, columns];//array of slotMachine initialized
 
             int continueGame = 1;
-            const int END_GAME = 0;
-
-            Random rng = new Random(); //declaring boundaries of numbers displayed in slotMachine
-            const int GUESSING_LOWERBOUND = 1;
-            const int GUESSING_UPPERBOUND = 3;
-
-            const int BET_ONE = 1;     //wager to just play horizontal middle line
-            const int BET_THREE = 3;   //wager to play all three lines
-            const int EARNING_FOR_ONE_LINE = 1;
+            Random rng = new Random();
 
             int gameMode = 0; //var to choose one of the game modes for 3$ wager
-            const int CHOOSE_ALL_HORIZONTAL = 1;
-            const int CHOOSE_ALL_VERTICAL = 2;
-            const int CHOOSE_ALL_DIAGONAL = 3;
-            const int CHOOSE_ALL_LINES = 4;
-            bool allLinesEnabled = false;
-
+            bool allLinesEnabled = false; //if all Lines are considered in a game
             int winCounter = 0;
 
             Console.WriteLine("One Game costs 1$. One WIN is considered, that only one matching row counts. \nYou win 1$ and your investment.");
@@ -60,6 +49,10 @@ namespace SlotMachine
                     {
                         break;
                     }
+                    /*This will fail unexpectidly with an exception here
+                     * because a letter cannot be converted into an integer.
+                     * How about using TryParse to verify that the input is a number ? 
+                    */
                     Console.WriteLine("Wrong bet inserted! Only press 1 or 3");
                     bet = Convert.ToInt16(Console.ReadLine());
                 }
@@ -85,6 +78,10 @@ namespace SlotMachine
                         Console.WriteLine("You Lose!");
                     }
                 }
+                /*The general idea behind this exercise is to work with loops and make sure that you can calculate the wins dynamically, 
+                 * in a way that if the grid changes from 3X3 to a 5X5 or a 7X7, no coding changes will be required, in order to calculate the wins.
+                Currently, this will fail if the grid is anything else but 3X3.
+                */
                 if (bet == BET_THREE)
                 {
                     Console.WriteLine("You waged 3$. Would you like to play all horizontal lines or all vertical lines\nor all diagnoal lines or all lines?");
