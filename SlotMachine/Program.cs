@@ -20,14 +20,13 @@ namespace SlotMachine
             const int CHOOSE_ALL_VERTICAL = 2;
             const int CHOOSE_ALL_DIAGONAL = 3;
             const int CHOOSE_ALL_LINES = 4;
+            const int GRID_SIZE = 3;     //size of array, e.g. 3x3
+
 
             Console.WriteLine($"SLOTMACHINE ARCADE!!!\nYou start with a balance of {STARTING_CREDITS}$.\nCome and Play!");
             int playerWallet = STARTING_CREDITS;  //money balance of player
 
-            int rows = 3;           //rows of array
-            int columns = 3;        //columns of array
-            int[,] slotMachineArray = new int[rows, columns];//array of slotMachine initialized
-
+            int[,] slotMachineArray = new int[GRID_SIZE, GRID_SIZE];//array of slotMachine initialized
             int continueGame = 1;
             Random rng = new Random();
 
@@ -58,9 +57,9 @@ namespace SlotMachine
                 }
                 playerWallet -= bet;
                 //filling the slot machine array with new values
-                for (int i = 0; i < rows; i++)
+                for (int i = 0; i < GRID_SIZE; i++)
                 {
-                    for (int j = 0; j < columns; j++)
+                    for (int j = 0; j < GRID_SIZE; j++)
                     {
                         slotMachineArray[i, j] = rng.Next(GUESSING_LOWERBOUND, GUESSING_UPPERBOUND);
                     }
@@ -104,7 +103,7 @@ namespace SlotMachine
                     }
                     if (gameMode == CHOOSE_ALL_HORIZONTAL) //check for any of the horizontal lines winning
                     {
-                        for (int i = 0; i < rows; i++)
+                        for (int i = 0; i < GRID_SIZE; i++)
                         {
                             if (slotMachineArray[i, 0] == slotMachineArray[i, 1] && slotMachineArray[i, 0] == slotMachineArray[i, 2])
                             {
@@ -124,7 +123,7 @@ namespace SlotMachine
                     }
                     if (gameMode == CHOOSE_ALL_VERTICAL) //check for vertical line matching
                     {
-                        for (int i = 0; i < columns; i++)
+                        for (int i = 0; i < GRID_SIZE; i++)
                         {
                             if (slotMachineArray[0, i] == slotMachineArray[1, i] && slotMachineArray[0, i] == slotMachineArray[2, i])
                             {
@@ -169,9 +168,9 @@ namespace SlotMachine
                 }
                 winCounter = 0; //reset Counter for win to 0
                 //output array to Console
-                for (int i = 0; i < rows; i++)
+                for (int i = 0; i < GRID_SIZE; i++)
                 {
-                    for (int j = 0; j < columns; j++)
+                    for (int j = 0; j < GRID_SIZE; j++)
                     {
                         Console.Write($"{slotMachineArray[i, j]} ");
                     }
