@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Metrics;
 using System.Threading.Channels;
+using System.Globalization;
 
 namespace SlotMachine
 {
@@ -40,7 +41,8 @@ namespace SlotMachine
             {
                 Console.WriteLine($"Your current balance: {playerWallet}$");
                 Console.WriteLine("Would you like to insert 1$ or 3$? Press 1 or 3");
-                int bet = Convert.ToInt16(Console.ReadLine());
+                int bet = 0;
+                int.TryParse(Console.ReadLine(), out bet);
                 //check for wrong input for wager
                 while (bet != BET_ONE || bet != BET_THREE)
                 {
@@ -53,7 +55,7 @@ namespace SlotMachine
                      * How about using TryParse to verify that the input is a number ? 
                     */
                     Console.WriteLine("Wrong bet inserted! Only press 1 or 3");
-                    bet = Convert.ToInt16(Console.ReadLine());
+                    int.TryParse(Console.ReadLine(), out bet);
                 }
                 playerWallet -= bet;
                 //filling the slot machine array with new values
@@ -85,7 +87,7 @@ namespace SlotMachine
                 {
                     Console.WriteLine("You waged 3$. Would you like to play all horizontal lines or all vertical lines\nor all diagnoal lines or all lines?");
                     Console.WriteLine("Press (1) for all horizontal, (2) for all vertical,\n(3) for all diagonal, (4) for all lines.");
-                    gameMode = Convert.ToInt16(Console.ReadLine());
+                    int.TryParse(Console.ReadLine(), out gameMode);
                     //check for wrong user input regarding input
                     while (gameMode != CHOOSE_ALL_HORIZONTAL || gameMode != CHOOSE_ALL_VERTICAL || gameMode != CHOOSE_ALL_DIAGONAL || gameMode != CHOOSE_ALL_LINES)
                     {
@@ -94,7 +96,7 @@ namespace SlotMachine
                             break;
                         }
                         Console.WriteLine("game mode not found! Only press 1, 2, 3 or 4");
-                        gameMode = Convert.ToInt16(Console.ReadLine());
+                        int.TryParse(Console.ReadLine(), out gameMode); ;
                     }
                     if (gameMode == CHOOSE_ALL_LINES)   //check for all lines
                     {
@@ -186,7 +188,7 @@ namespace SlotMachine
                 }
                 //ask user to continue
                 Console.WriteLine("Do you want to continue?\nType 1 for continue,\ntype 0 to end the game.");
-                continueGame = Convert.ToInt16(Console.ReadLine());
+                int.TryParse(Console.ReadLine(), out continueGame);
                 if (continueGame == END_GAME)
                 {
                     break;
