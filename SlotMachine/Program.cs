@@ -21,8 +21,9 @@ namespace SlotMachine
             const int CHOOSE_ALL_VERTICAL = 2;
             const int CHOOSE_ALL_DIAGONAL = 3;
             const int CHOOSE_ALL_LINES = 4;
-            const int GRID_SIZE = 5;     //size of array, e.g. 3x3
+            const int GRID_SIZE = 3;     //size of array, e.g. 3x3
             const int CENTRAL_LINE_INDEX_OF_GRID = GRID_SIZE / 2;
+            const int LAST_INDEX_GRID = GRID_SIZE - 1;
 
             Console.WriteLine($"SLOTMACHINE ARCADE!!!\nYou start with a balance of {STARTING_CREDITS}$.\nCome and Play!");
             int playerWallet = STARTING_CREDITS;  //money balance of player
@@ -33,9 +34,8 @@ namespace SlotMachine
 
             int gameMode = 0; //var to choose one of the game modes for 3$ wager
             bool allLinesEnabled = false; //if all Lines are considered in a game
-            int winCounter = 0;
-            int lastIndexOfArray = GRID_SIZE - 1;
-            int secondLastIndexOfArray = GRID_SIZE - 2;
+            int winCounter = 0; //counter for 3$ bets; if one line wins, you get wager back
+
 
             Console.WriteLine("One Game costs 1$. One WIN is considered, that only one matching row counts. \nYou win 1$ and your investment.");
             Console.WriteLine("You also have an option to bet 3$ and all lines will count then. High Risk, Higher Reward!");
@@ -46,6 +46,15 @@ namespace SlotMachine
                 int bet = 0;
                 int.TryParse(Console.ReadLine(), out bet);
                 //check for wrong input for wager
+                while(bet == BET_THREE && playerWallet < BET_THREE)
+                {
+                    Console.WriteLine($"Not sufficient funds! You only have {playerWallet}$ left.");
+                    int.TryParse(Console.ReadLine(), out bet);
+                    if (bet == BET_ONE)
+                    {
+                        break;
+                    }
+                }
                 while (bet != BET_ONE || bet != BET_THREE)
                 {
                     if (bet == BET_ONE || bet == BET_THREE)
@@ -55,6 +64,7 @@ namespace SlotMachine
                     Console.WriteLine("Wrong bet inserted! Only press 1 or 3");
                     int.TryParse(Console.ReadLine(), out bet);
                 }
+                
                 playerWallet -= bet;
                 //filling the slot machine array with new values
                 for (int i = 0; i < GRID_SIZE; i++)
@@ -63,12 +73,12 @@ namespace SlotMachine
                     {
                         slotMachineArray[i, j] = rng.Next(GUESSING_LOWERBOUND, GUESSING_UPPERBOUND);
                     }
-                }               
-
-                if (bet == BET_ONE)         //check for just middle horizontal line matching
+                }
+                //check for just middle horizontal line matching
+                if (bet == BET_ONE)
                 {
                     bool allEqual = true;
-                    for (int i = 0; i < lastIndexOfArray; i++)
+                    for (int i = 0; i < LAST_INDEX_GRID; i++)
                     {
 
                         if (slotMachineArray[CENTRAL_LINE_INDEX_OF_GRID, i] != slotMachineArray[CENTRAL_LINE_INDEX_OF_GRID, i + 1])
@@ -110,31 +120,25 @@ namespace SlotMachine
                     }
                     if (gameMode == CHOOSE_ALL_HORIZONTAL) //check for any of the horizontal lines winning
                     {
+                        bool allEqual = true;
                         for (int i = 0; i < GRID_SIZE; i++)
                         {
-                            for (int j = 0; j < GRID_SIZE - 1; j++)
+                            for (int j = 0; j < LAST_INDEX_GRID; j++)
                             {
                                 if (slotMachineArray[i, j] != slotMachineArray[i, j + 1])
                                 {
+                                    allEqual = false;
+                                    Console.WriteLine($"No machting line for row {i}!");
                                     break;
                                 }
-                                if (slotMachineArray[i, secondLastIndexOfArray] == slotMachineArray[i, lastIndexOfArray])
-                                {
-                                    winCounter++;
-                                }
                             }
-                            if (winCounter == GRID_SIZE)
+                            if (allEqual)
                             {
-                                Console.WriteLine("You Won! One horizontal line was a match.");
+                                Console.WriteLine("You Won! Middle horizontal line was a match.");
                                 playerWallet += EARNING_FOR_ONE_LINE;
-                            }
-                            if (winCounter != GRID_SIZE)
-                            {
-                                Console.WriteLine($"No matching line at row {i}!");
-                                winCounter = 0;
+                                winCounter++;
                             }
                         }
-
                         if (allLinesEnabled == true)
                         {
                             gameMode = CHOOSE_ALL_VERTICAL; //for CHOOSE_ALL_LINES switch from horizontal check to vertical check
