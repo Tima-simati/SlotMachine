@@ -21,8 +21,8 @@ namespace SlotMachine
             const int CHOOSE_ALL_VERTICAL = 2;
             const int CHOOSE_ALL_DIAGONAL = 3;
             const int CHOOSE_ALL_LINES = 4;
-            const int GRID_SIZE = 3;     //size of array, e.g. 3x3
-
+            const int GRID_SIZE = 5;     //size of array, e.g. 3x3
+            const int CENTRAL_LINE_INDEX_OF_GRID = GRID_SIZE / 2;
 
             Console.WriteLine($"SLOTMACHINE ARCADE!!!\nYou start with a balance of {STARTING_CREDITS}$.\nCome and Play!");
             int playerWallet = STARTING_CREDITS;  //money balance of player
@@ -34,6 +34,8 @@ namespace SlotMachine
             int gameMode = 0; //var to choose one of the game modes for 3$ wager
             bool allLinesEnabled = false; //if all Lines are considered in a game
             int winCounter = 0;
+            int lastIndexOfArray = GRID_SIZE - 1;
+            int secondLastIndexOfArray = GRID_SIZE - 2;
 
             Console.WriteLine("One Game costs 1$. One WIN is considered, that only one matching row counts. \nYou win 1$ and your investment.");
             Console.WriteLine("You also have an option to bet 3$ and all lines will count then. High Risk, Higher Reward!");
@@ -50,10 +52,6 @@ namespace SlotMachine
                     {
                         break;
                     }
-                    /*This will fail unexpectidly with an exception here
-                     * because a letter cannot be converted into an integer.
-                     * How about using TryParse to verify that the input is a number ? 
-                    */
                     Console.WriteLine("Wrong bet inserted! Only press 1 or 3");
                     int.TryParse(Console.ReadLine(), out bet);
                 }
@@ -65,18 +63,25 @@ namespace SlotMachine
                     {
                         slotMachineArray[i, j] = rng.Next(GUESSING_LOWERBOUND, GUESSING_UPPERBOUND);
                     }
-                }
+                }               
 
                 if (bet == BET_ONE)         //check for just middle horizontal line matching
                 {
-                    if (slotMachineArray[1, 0] == slotMachineArray[1, 1] && slotMachineArray[1, 0] == slotMachineArray[1, 2])
+                    bool allEqual = true;
+                    for (int i = 0; i < lastIndexOfArray; i++)
+                    {
+
+                        if (slotMachineArray[CENTRAL_LINE_INDEX_OF_GRID, i] != slotMachineArray[CENTRAL_LINE_INDEX_OF_GRID, i + 1])
+                        {
+                            allEqual = false;
+                            Console.WriteLine("You Lose!");
+                            break;
+                        }
+                    }
+                    if (allEqual)
                     {
                         Console.WriteLine("You Won! Middle horizontal line was a match.");
-                        playerWallet += EARNING_FOR_ONE_LINE + BET_ONE; //won wager back and 1$ for matching horizontal line
-                    }
-                    else
-                    {
-                        Console.WriteLine("You Lose!");
+                        playerWallet += EARNING_FOR_ONE_LINE + BET_ONE;
                     }
                 }
                 /*The general idea behind this exercise is to work with loops and make sure that you can calculate the wins dynamically, 
@@ -107,17 +112,29 @@ namespace SlotMachine
                     {
                         for (int i = 0; i < GRID_SIZE; i++)
                         {
-                            if (slotMachineArray[i, 0] == slotMachineArray[i, 1] && slotMachineArray[i, 0] == slotMachineArray[i, 2])
+                            for (int j = 0; j < GRID_SIZE - 1; j++)
+                            {
+                                if (slotMachineArray[i, j] != slotMachineArray[i, j + 1])
+                                {
+                                    break;
+                                }
+                                if (slotMachineArray[i, secondLastIndexOfArray] == slotMachineArray[i, lastIndexOfArray])
+                                {
+                                    winCounter++;
+                                }
+                            }
+                            if (winCounter == GRID_SIZE)
                             {
                                 Console.WriteLine("You Won! One horizontal line was a match.");
                                 playerWallet += EARNING_FOR_ONE_LINE;
-                                winCounter++;
                             }
-                            else
+                            if (winCounter != GRID_SIZE)
                             {
-                                Console.WriteLine("You Lose!");
+                                Console.WriteLine($"No matching line at row {i}!");
+                                winCounter = 0;
                             }
                         }
+
                         if (allLinesEnabled == true)
                         {
                             gameMode = CHOOSE_ALL_VERTICAL; //for CHOOSE_ALL_LINES switch from horizontal check to vertical check
@@ -189,6 +206,15 @@ namespace SlotMachine
                 //ask user to continue game
                 Console.WriteLine("Do you want to continue?\nType 1 for continue,\ntype 0 to end the game.");
                 int.TryParse(Console.ReadLine(), out continueGame);
+                while (continueGame != 1 || continueGame != END_GAME)
+                {
+                    if (continueGame == 1 || continueGame == END_GAME)
+                    {
+                        break;
+                    }
+                    Console.WriteLine($"No option found for {continueGame} ! Only press 0 or 1");
+                    int.TryParse(Console.ReadLine(), out continueGame);
+                }
                 if (continueGame == END_GAME)
                 {
                     break;
@@ -208,3 +234,4 @@ namespace SlotMachine
         }
     }
 }
+
