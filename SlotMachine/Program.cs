@@ -35,6 +35,7 @@ namespace SlotMachine
             int gameMode = 0; //var to choose one of the game modes for 3$ wager
             bool allLinesEnabled = false; //if all Lines are considered in a game
             int winCounter = 0; //counter for 3$ bets; if one line wins, you get wager back
+            
 
 
             Console.WriteLine("One Game costs 1$. One WIN is considered, that only one matching row counts. \nYou win 1$ and your investment.");
@@ -48,7 +49,7 @@ namespace SlotMachine
                 //check for wrong input for wager
                 while(bet == BET_THREE && playerWallet < BET_THREE)
                 {
-                    Console.WriteLine($"Not sufficient funds! You only have {playerWallet}$ left.");
+                    Console.WriteLine($"Not sufficient funds! You only have {playerWallet}$ left. Insert 1$ by pressing 1.");
                     int.TryParse(Console.ReadLine(), out bet);
                     if (bet == BET_ONE)
                     {
@@ -67,13 +68,18 @@ namespace SlotMachine
                 
                 playerWallet -= bet;
                 //filling the slot machine array with new values
-                for (int i = 0; i < GRID_SIZE; i++)
-                {
-                    for (int j = 0; j < GRID_SIZE; j++)
-                    {
-                        slotMachineArray[i, j] = rng.Next(GUESSING_LOWERBOUND, GUESSING_UPPERBOUND);
-                    }
-                }
+
+                //for (int i = 0; i < GRID_SIZE; i++)
+                //{
+                //    for (int j = 0; j < GRID_SIZE; j++)
+                //    {
+                //        slotMachineArray[i, j] = rng.Next(GUESSING_LOWERBOUND, GUESSING_UPPERBOUND);
+
+                //    }
+                //}
+
+                slotMachineArray = new int[,] { { 2, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } }; //just for debug purposes
+
                 //check for just middle horizontal line matching
                 if (bet == BET_ONE)
                 {
@@ -128,16 +134,17 @@ namespace SlotMachine
                                 if (slotMachineArray[i, j] != slotMachineArray[i, j + 1])
                                 {
                                     allEqual = false;
-                                    Console.WriteLine($"No machting line for row {i}!");
+                                    Console.WriteLine($"No matching line for row {i}!");
                                     break;
                                 }
                             }
                             if (allEqual)
                             {
-                                Console.WriteLine("You Won! Middle horizontal line was a match.");
+                                Console.WriteLine("You Won! A horizontal line was a match.");
                                 playerWallet += EARNING_FOR_ONE_LINE;
                                 winCounter++;
                             }
+                            allEqual = true;
                         }
                         if (allLinesEnabled == true)
                         {
@@ -146,19 +153,39 @@ namespace SlotMachine
                     }
                     if (gameMode == CHOOSE_ALL_VERTICAL) //check for vertical line matching
                     {
+                        bool allEqual = true;
                         for (int i = 0; i < GRID_SIZE; i++)
                         {
-                            if (slotMachineArray[0, i] == slotMachineArray[1, i] && slotMachineArray[0, i] == slotMachineArray[2, i])
+                            for (int j = 0; j < LAST_INDEX_GRID; j++)
                             {
-                                Console.WriteLine("You Won! One vertical line was a match.");
+                                if (slotMachineArray[j, i] != slotMachineArray[j+1, i])
+                                {
+                                    allEqual = false;
+                                    Console.WriteLine($"No matching line for column {j}!");
+                                    break;
+                                }
+                            }
+                            if (allEqual)
+                            {
+                                Console.WriteLine("You Won! A vertical line was a match.");
                                 playerWallet += EARNING_FOR_ONE_LINE;
                                 winCounter++;
                             }
-                            else
-                            {
-                                Console.WriteLine("You Lose!");
-                            }
+                            allEqual = true;
                         }
+                        //for (int i = 0; i < GRID_SIZE; i++)
+                        //{
+                        //    if (slotMachineArray[0, i] == slotMachineArray[1, i] && slotMachineArray[0, i] == slotMachineArray[2, i])
+                        //    {
+                        //        Console.WriteLine("You Won! One vertical line was a match.");
+                        //        playerWallet += EARNING_FOR_ONE_LINE;
+                        //        winCounter++;
+                        //    }
+                        //    else
+                        //    {
+                        //        Console.WriteLine("You Lose!");
+                        //    }
+                        //}
                         if (allLinesEnabled == true)
                         {
                             gameMode = CHOOSE_ALL_DIAGONAL; //for CHOOSE_ALL_LINES switch from vertical check to horizontal check
