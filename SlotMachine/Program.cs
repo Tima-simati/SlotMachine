@@ -25,6 +25,8 @@ namespace SlotMachine
             const int CENTRAL_LINE_INDEX_OF_GRID = GRID_SIZE / 2;
             const int LAST_INDEX_GRID = GRID_SIZE - 1;
 
+            var gameMode_choices = new List<int> { CHOOSE_ALL_HORIZONTAL, CHOOSE_ALL_VERTICAL, CHOOSE_ALL_DIAGONAL, CHOOSE_ALL_LINES };
+
             Console.WriteLine($"SLOTMACHINE ARCADE!!!\nYou start with a balance of {STARTING_CREDITS}$.\nCome and Play!");
             int playerWallet = STARTING_CREDITS;  //money balance of player
 
@@ -100,18 +102,23 @@ namespace SlotMachine
                 if (bet == BET_THREE)
                 {
                     Console.WriteLine("You waged 3$. Would you like to play all horizontal lines or all vertical lines\nor all diagnoal lines or all lines?");
-                    Console.WriteLine("Press (1) for all horizontal, (2) for all vertical,\n(3) for all diagonal, (4) for all lines.");
+                    Console.WriteLine($"Press {gameMode_choices[0]} for {nameof(CHOOSE_ALL_HORIZONTAL)}, {gameMode_choices[1]} for {nameof(CHOOSE_ALL_VERTICAL)},\n{gameMode_choices[2]} for {nameof(CHOOSE_ALL_DIAGONAL)}, {gameMode_choices[3]} for {nameof(CHOOSE_ALL_LINES)}.");
                     int.TryParse(Console.ReadLine(), out gameMode);
                     //check for wrong user input regarding input
-                    while (gameMode != CHOOSE_ALL_HORIZONTAL || gameMode != CHOOSE_ALL_VERTICAL || gameMode != CHOOSE_ALL_DIAGONAL || gameMode != CHOOSE_ALL_LINES)
+                    /*while(!validModes.Contains(gameMode)) -> this way you can check cleaner if the gameMode is one of the valids. 
+                     * and same thing can be done on the next if case as well. 
+                     * what do you think?                                       
+                    */
+                    while (!gameMode_choices.Contains(gameMode))
                     {
-                        if (gameMode == CHOOSE_ALL_HORIZONTAL || gameMode == CHOOSE_ALL_VERTICAL || gameMode == CHOOSE_ALL_DIAGONAL || gameMode == CHOOSE_ALL_LINES)
+                        Console.WriteLine("game mode not found! Only press 1, 2, 3 or 4");
+                        int.TryParse(Console.ReadLine(), out gameMode);
+                        if (gameMode_choices.Contains(gameMode))
                         {
                             break;
-                        }
-                        Console.WriteLine("game mode not found! Only press 1, 2, 3 or 4");
-                        int.TryParse(Console.ReadLine(), out gameMode); ;
+                        }                     
                     }
+
                     if (gameMode == CHOOSE_ALL_LINES)   //check for all lines
                     {
                         gameMode = CHOOSE_ALL_HORIZONTAL; //since all lines to play are chosen; switch to horizontal lines check
