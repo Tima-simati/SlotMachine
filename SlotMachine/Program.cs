@@ -12,8 +12,7 @@ namespace SlotMachine
             const int STARTING_CREDITS = 10;
             const int END_GAME = 0;
             //declaring boundaries of numbers displayed in slotMachine
-            const int GUESSING_LOWERBOUND = 1;
-            const int GUESSING_UPPERBOUND = 3;
+
             const int BET_ONE = 1;  //for only center horizontal game
             const int BET_THREE = 3;//for all other game modes
             const int EARNING_FOR_ONE_LINE = 1;
@@ -22,47 +21,36 @@ namespace SlotMachine
             const int CHOOSE_ALL_DIAGONAL = 3;
             const int CHOOSE_ALL_LINES = 4;
             const int GRID_SIZE = 3;     //size of array, e.g. 3x3
-            const int CENTRAL_LINE_INDEX_OF_GRID = GRID_SIZE / 2;
             const int LAST_INDEX_GRID = GRID_SIZE - 1;
 
             var gameMode_choices = new List<int> { CHOOSE_ALL_HORIZONTAL, CHOOSE_ALL_VERTICAL, CHOOSE_ALL_DIAGONAL, CHOOSE_ALL_LINES };
 
             int playerWallet = STARTING_CREDITS;  //money balance of player
-            UI.WelcomeScreen(STARTING_CREDITS);
             int[,] slotMachineArray = new int[GRID_SIZE, GRID_SIZE];//array of slotMachine initialized
             int continueGame = 1;
-            Random rng = new Random();
-
+            
             int gameMode = 0; //var to choose one of the game modes for 3$ wager
             bool allLinesEnabled = false; //if all Lines are considered in a game
             int winCounter = 0; //counter for 3$ bets; if one line wins, you get wager back
 
+            UI.WelcomeScreen(STARTING_CREDITS);
             while (continueGame == 1)
             {
                 UI.ShowCurrentBalance(playerWallet);
                 int bet = UI.ChooseWager(playerWallet);
-                playerWallet -= bet;
-                //filling the slot machine array with new values
-
-                slotMachineArray = Logic.SpinSlotMachine();
+                playerWallet -= bet; //deduct wager from current player balance
+                slotMachineArray = Logic.SpinSlotMachine(); //filling the slot machine array with new values
 
                 //1$ GAME: check for just central horizontal line matching
                 if (bet == BET_ONE)
                 {
-                    bool allEqual = true;
-                    for (int i = 0; i < LAST_INDEX_GRID; i++)
+                    if (!Logic.PlayOnlyCenterHorizontalLine(slotMachineArray)) //lose center line game
                     {
-
-                        if (slotMachineArray[CENTRAL_LINE_INDEX_OF_GRID, i] != slotMachineArray[CENTRAL_LINE_INDEX_OF_GRID, i + 1])
-                        {
-                            allEqual = false;
-                            Console.WriteLine("You Lose!");
-                            break;
-                        }
+                        UI.ShowCurrentGameLossFor1Dollar();
                     }
-                    if (allEqual)
+                    if (Logic.PlayOnlyCenterHorizontalLine(slotMachineArray)) // win center line game
                     {
-                        Console.WriteLine("You Won! Center horizontal line was a match.");
+                        UI.ShowCurrentGameWinFor1Dollar();
                         playerWallet += EARNING_FOR_ONE_LINE + BET_ONE;
                     }
                 }
@@ -189,20 +177,13 @@ namespace SlotMachine
                 }
                 winCounter = 0; //reset Counter for win to 0
                 //output array to Console
-                for (int i = 0; i < GRID_SIZE; i++)
-                {
-                    for (int j = 0; j < GRID_SIZE; j++)
-                    {
-                        Console.Write($"{slotMachineArray[i, j]} ");
-                    }
-                    Console.WriteLine();
-                }
-                Console.WriteLine($"Credits left: {playerWallet}");
+                UI.ShowArray(slotMachineArray, GRID_SIZE);
+                UI.ShowCreditsLeft(playerWallet);
 
                 //check if playerWallet is not 0; losing condition
                 if (playerWallet <= 0)
                 {
-                    Console.WriteLine("You are out of credits.");
+                    UI.ShowZeroBalance();
                     break;
                 }
                 //ask user to continue game
@@ -221,17 +202,17 @@ namespace SlotMachine
                 {
                     break;
                 }
-                Console.Clear();
+                UI.CleanScreen();
             }
             //output text to show, how much was won or lost
-            Console.WriteLine($"Game ended! Your balance is: {playerWallet}");
+            UI.ShowEndScreen(playerWallet);
             if (playerWallet > STARTING_CREDITS)
             {
-                Console.WriteLine($"You won {playerWallet - STARTING_CREDITS}.");
+                UI.ShowWinnings(playerWallet, STARTING_CREDITS);
             }
             if (playerWallet < STARTING_CREDITS)
             {
-                Console.WriteLine($"You lost {STARTING_CREDITS - playerWallet}.");
+                UI.ShowLosses(playerWallet, STARTING_CREDITS);
             }
         }
     }

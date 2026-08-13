@@ -61,6 +61,24 @@ namespace SlotMachine
         {
             Console.WriteLine($"Your current balance: {balance}$");
         }
+        public static void ShowCreditsLeft(int balance)
+        {
+            Console.WriteLine($"Credits left: {balance}");
+        }
+        public static void ShowCurrentGameLossFor1Dollar()
+        {
+            Console.WriteLine("You Lose!");
+        }
+        public static void ShowCurrentGameWinFor1Dollar()
+        {
+            Console.WriteLine("You Won! Center horizontal line was a match.");
+        }
+        //public static void ShowGameModeOptions(int gameMode)
+        //{
+        //    Console.WriteLine("You waged 3$. Would you like to play all horizontal lines or all vertical lines\nor all diagnoal lines or all lines?");
+        //    Console.WriteLine($"Press {gameMode_choices[0]} for {nameof(CHOOSE_ALL_HORIZONTAL)}, {gameMode_choices[1]} for {nameof(CHOOSE_ALL_VERTICAL)},\n{gameMode_choices[2]} for {nameof(CHOOSE_ALL_DIAGONAL)}, {gameMode_choices[3]} for {nameof(CHOOSE_ALL_LINES)}.");
+        //    int.TryParse(Console.ReadLine(), out gameMode);
+        //}
         public static void ShowZeroBalance()
         {
             Console.WriteLine("You are out of credits.");
