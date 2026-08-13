@@ -15,12 +15,7 @@ namespace SlotMachine
             ALL_VERTICAL,
             ALL_DIAGONAL,
             ALL_LINES
-        }
-        enum betSize
-        {
-            BET_ONE,
-            BET_THREE
-        }
+        }        
         enum gameState
         {
             CONTINUE_GAME,
