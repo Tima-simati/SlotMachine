@@ -25,15 +25,15 @@ namespace SlotMachine
 
             var gameMode_choices = new List<int> { CHOOSE_ALL_HORIZONTAL, CHOOSE_ALL_VERTICAL, CHOOSE_ALL_DIAGONAL, CHOOSE_ALL_LINES };
 
-            int playerWallet = STARTING_CREDITS;  //money balance of player
-            int[,] slotMachineArray = new int[GRID_SIZE, GRID_SIZE];//array of slotMachine initialized
+            int playerWallet = Constants.STARTING_CREDITS;  //money balance of player
+            int[,] slotMachineArray = new int[Constants.GRID_SIZE, Constants.GRID_SIZE];//array of slotMachine initialized
             int continueGame = 1;
             
             int gameMode = 0; //var to choose one of the game modes for 3$ wager
             bool allLinesEnabled = false; //if all Lines are considered in a game
             int winCounter = 0; //counter for 3$ bets; if one line wins, you get wager back
 
-            UI.WelcomeScreen(STARTING_CREDITS);
+            UI.PrintWelcomeScreen(Constants.STARTING_CREDITS);
             while (continueGame == 1)
             {
                 UI.ShowCurrentBalance(playerWallet);
@@ -42,39 +42,23 @@ namespace SlotMachine
                 slotMachineArray = Logic.SpinSlotMachine(); //filling the slot machine array with new values
 
                 //1$ GAME: check for just central horizontal line matching
-                if (bet == BET_ONE)
+                if (bet == Constants.BET_ONE)
                 {
                     if (!Logic.PlayOnlyCenterHorizontalLine(slotMachineArray)) //lose center line game
                     {
                         UI.ShowCurrentGameLossFor1Dollar();
                     }
-                    if (Logic.PlayOnlyCenterHorizontalLine(slotMachineArray)) // win center line game
+                    else // win center line game
                     {
                         UI.ShowCurrentGameWinFor1Dollar();
-                        playerWallet += EARNING_FOR_ONE_LINE + BET_ONE;
+                        playerWallet += Constants.EARNING_FOR_ONE_LINE + Constants.BET_ONE;
                     }
                 }
                 //3$ GAME: check for all horizontal, vertical and diagonal lines matching
-                if (bet == BET_THREE)
+                if (bet == Constants.BET_THREE)
                 {
-                    Console.WriteLine("You waged 3$. Would you like to play all horizontal lines or all vertical lines\nor all diagnoal lines or all lines?");
-                    Console.WriteLine($"Press {gameMode_choices[0]} for {nameof(CHOOSE_ALL_HORIZONTAL)}, {gameMode_choices[1]} for {nameof(CHOOSE_ALL_VERTICAL)},\n{gameMode_choices[2]} for {nameof(CHOOSE_ALL_DIAGONAL)}, {gameMode_choices[3]} for {nameof(CHOOSE_ALL_LINES)}.");
-                    int.TryParse(Console.ReadLine(), out gameMode);
-                    //check for wrong user input regarding input
-                    /*while(!validModes.Contains(gameMode)) -> this way you can check cleaner if the gameMode is one of the valids. 
-                     * and same thing can be done on the next if case as well. 
-                     * what do you think?                                       
-                    */
-                    while (!gameMode_choices.Contains(gameMode))
-                    {
-                        Console.WriteLine("game mode not found! Only press 1, 2, 3 or 4");
-                        int.TryParse(Console.ReadLine(), out gameMode);
-                        if (gameMode_choices.Contains(gameMode))
-                        {
-                            break;
-                        }
-                    }
-
+                    gameMode = UI.ShowGameModeOptions();                    
+                 
                     if (gameMode == CHOOSE_ALL_LINES)   //check for all lines
                     {
                         gameMode = CHOOSE_ALL_HORIZONTAL; //since all lines to play are chosen; switch to horizontal lines check
@@ -177,7 +161,7 @@ namespace SlotMachine
                 }
                 winCounter = 0; //reset Counter for win to 0
                 //output array to Console
-                UI.ShowArray(slotMachineArray, GRID_SIZE);
+                UI.ShowArray(slotMachineArray, Constants.GRID_SIZE);
                 UI.ShowCreditsLeft(playerWallet);
 
                 //check if playerWallet is not 0; losing condition
@@ -206,13 +190,13 @@ namespace SlotMachine
             }
             //output text to show, how much was won or lost
             UI.ShowEndScreen(playerWallet);
-            if (playerWallet > STARTING_CREDITS)
+            if (playerWallet > Constants.STARTING_CREDITS)
             {
-                UI.ShowWinnings(playerWallet, STARTING_CREDITS);
+                UI.ShowWinnings(playerWallet, Constants.STARTING_CREDITS);
             }
-            if (playerWallet < STARTING_CREDITS)
+            if (playerWallet < Constants.STARTING_CREDITS)
             {
-                UI.ShowLosses(playerWallet, STARTING_CREDITS);
+                UI.ShowLosses(playerWallet, Constants.STARTING_CREDITS);
             }
         }
     }

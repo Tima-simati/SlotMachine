@@ -13,18 +13,7 @@ namespace SlotMachine
         const int GUESSING_UPPERBOUND = 3;
         public static Random rng = new Random();
         public static int winCounter = 0; //counter for 3$ bets; if one line wins, you get wager back
-        enum gameMode
-        {
-            ALL_HORIZONTAL,
-            ALL_VERTICAL,
-            ALL_DIAGONAL,
-            ALL_LINES
-        }        
-        enum gameState
-        {
-            CONTINUE_GAME,
-            END_GAME
-        }
+       
         public static int[,] SpinSlotMachine()
         {
             int[,] array = new int[GRID_SIZE, GRID_SIZE];

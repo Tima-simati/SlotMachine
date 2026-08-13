@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using static SlotMachine.Enums;
 
 namespace SlotMachine
 {
     public static class UI
     {
 
-        public static void WelcomeScreen(int credits)
+        public static void PrintWelcomeScreen(int credits)
         {
             Console.WriteLine($"SLOTMACHINE ARCADE!!!\nYou start with a balance of {credits}$.\nCome and Play!");
             Console.WriteLine("One Game costs 1$. One WIN is considered, that only one matching row counts. \nYou win 1$ and your investment.");
@@ -73,12 +74,25 @@ namespace SlotMachine
         {
             Console.WriteLine("You Won! Center horizontal line was a match.");
         }
-        //public static void ShowGameModeOptions(int gameMode)
-        //{
-        //    Console.WriteLine("You waged 3$. Would you like to play all horizontal lines or all vertical lines\nor all diagnoal lines or all lines?");
-        //    Console.WriteLine($"Press {gameMode_choices[0]} for {nameof(CHOOSE_ALL_HORIZONTAL)}, {gameMode_choices[1]} for {nameof(CHOOSE_ALL_VERTICAL)},\n{gameMode_choices[2]} for {nameof(CHOOSE_ALL_DIAGONAL)}, {gameMode_choices[3]} for {nameof(CHOOSE_ALL_LINES)}.");
-        //    int.TryParse(Console.ReadLine(), out gameMode);
-        //}
+        public static int ShowGameModeOptions()
+        {
+            int chosen_gameMode = 0;
+            Console.WriteLine("You waged 3$. Would you like to play all horizontal lines or all vertical lines\nor all diagnoal lines or all lines?");
+            Console.Write($"Press {(int)Enums.GameMode.CHOOSE_ALL_HORIZONTAL} for {nameof(Enums.GameMode.CHOOSE_ALL_HORIZONTAL)}, {(int)Enums.GameMode.CHOOSE_ALL_VERTICAL} for {nameof(Enums.GameMode.CHOOSE_ALL_VERTICAL)},");
+            Console.WriteLine($"\n{(int)Enums.GameMode.CHOOSE_ALL_DIAGONAL} for {nameof(Enums.GameMode.CHOOSE_ALL_DIAGONAL)}, {(int)Enums.GameMode.CHOOSE_ALL_LINES} for {nameof(Enums.GameMode.CHOOSE_ALL_LINES)}.");
+            int.TryParse(Console.ReadLine(), out chosen_gameMode);
+            //check for wrong user input regarding input
+            while (!Enum.IsDefined(typeof(GameMode), chosen_gameMode))
+            {
+                Console.WriteLine("game mode not found! Only press 1, 2, 3 or 4");
+                int.TryParse(Console.ReadLine(), out chosen_gameMode);
+                if (Enum.IsDefined(typeof(GameMode), chosen_gameMode))
+                {
+                    return chosen_gameMode;
+                }
+            }
+            return chosen_gameMode;
+        }
         public static void ShowZeroBalance()
         {
             Console.WriteLine("You are out of credits.");
