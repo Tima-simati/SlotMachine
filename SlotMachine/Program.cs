@@ -14,8 +14,8 @@ namespace SlotMachine
             //declaring boundaries of numbers displayed in slotMachine
             const int GUESSING_LOWERBOUND = 1;
             const int GUESSING_UPPERBOUND = 3;
-            const int BET_ONE = 1;     //wager to just play horizontal middle line
-            const int BET_THREE = 3;   //wager to play all three lines
+            const int BET_ONE = 1;  //for only center horizontal game
+            const int BET_THREE = 3;//for all other game modes
             const int EARNING_FOR_ONE_LINE = 1;
             const int CHOOSE_ALL_HORIZONTAL = 1;
             const int CHOOSE_ALL_VERTICAL = 2;
@@ -27,9 +27,8 @@ namespace SlotMachine
 
             var gameMode_choices = new List<int> { CHOOSE_ALL_HORIZONTAL, CHOOSE_ALL_VERTICAL, CHOOSE_ALL_DIAGONAL, CHOOSE_ALL_LINES };
 
-            Console.WriteLine($"SLOTMACHINE ARCADE!!!\nYou start with a balance of {STARTING_CREDITS}$.\nCome and Play!");
             int playerWallet = STARTING_CREDITS;  //money balance of player
-
+            UI.WelcomeScreen(STARTING_CREDITS);
             int[,] slotMachineArray = new int[GRID_SIZE, GRID_SIZE];//array of slotMachine initialized
             int continueGame = 1;
             Random rng = new Random();
@@ -38,45 +37,14 @@ namespace SlotMachine
             bool allLinesEnabled = false; //if all Lines are considered in a game
             int winCounter = 0; //counter for 3$ bets; if one line wins, you get wager back
 
-            Console.WriteLine("One Game costs 1$. One WIN is considered, that only one matching row counts. \nYou win 1$ and your investment.");
-            Console.WriteLine("You also have an option to bet 3$ and all lines will count then. High Risk, Higher Reward!");
             while (continueGame == 1)
             {
-                Console.WriteLine($"Your current balance: {playerWallet}$");
-                Console.WriteLine("Would you like to insert 1$ or 3$? Press 1 or 3");
-                int bet = 0;
-                int.TryParse(Console.ReadLine(), out bet);
-                //check for wrong input for wager
-                while (bet == BET_THREE && playerWallet < BET_THREE)
-                {
-                    Console.WriteLine($"Not sufficient funds! You only have {playerWallet}$ left. Insert 1$ by pressing 1.");
-                    int.TryParse(Console.ReadLine(), out bet);
-                    if (bet == BET_ONE)
-                    {
-                        break;
-                    }
-                }
-                while (bet != BET_ONE || bet != BET_THREE)
-                {
-                    if (bet == BET_ONE || bet == BET_THREE)
-                    {
-                        break;
-                    }
-                    Console.WriteLine("Wrong bet inserted! Only press 1 or 3");
-                    int.TryParse(Console.ReadLine(), out bet);
-                }
-
+                UI.ShowCurrentBalance(playerWallet);
+                int bet = UI.ChooseWager(playerWallet);
                 playerWallet -= bet;
                 //filling the slot machine array with new values
 
-                for (int i = 0; i < GRID_SIZE; i++)
-                {
-                    for (int j = 0; j < GRID_SIZE; j++)
-                    {
-                        slotMachineArray[i, j] = rng.Next(GUESSING_LOWERBOUND, GUESSING_UPPERBOUND);
-
-                    }
-                }
+                slotMachineArray = Logic.SpinSlotMachine();
 
                 //1$ GAME: check for just central horizontal line matching
                 if (bet == BET_ONE)
@@ -94,7 +62,7 @@ namespace SlotMachine
                     }
                     if (allEqual)
                     {
-                        Console.WriteLine("You Won! Middle horizontal line was a match.");
+                        Console.WriteLine("You Won! Center horizontal line was a match.");
                         playerWallet += EARNING_FOR_ONE_LINE + BET_ONE;
                     }
                 }
@@ -116,7 +84,7 @@ namespace SlotMachine
                         if (gameMode_choices.Contains(gameMode))
                         {
                             break;
-                        }                     
+                        }
                     }
 
                     if (gameMode == CHOOSE_ALL_LINES)   //check for all lines
@@ -140,7 +108,7 @@ namespace SlotMachine
                             }
                             if (allEqual)
                             {
-                                Console.WriteLine("You Won! A horizontal line was a match.");
+                                Console.WriteLine($"You Won! Row {i} line was a match.");
                                 playerWallet += EARNING_FOR_ONE_LINE;
                                 winCounter++;
                             }
@@ -186,13 +154,13 @@ namespace SlotMachine
                             if (slotMachineArray[i, j] != slotMachineArray[i + 1, j + 1])
                             {
                                 allEqual = false;
-                                Console.WriteLine($"No matching diagonal line!");
+                                Console.WriteLine($"No matching declining diagonal line!");
                                 break;
                             }
                         }
                         if (allEqual)
                         {
-                            Console.WriteLine("You Won! A diagnoal line was a match.");
+                            Console.WriteLine("You Won! Declining diagnoal line was a match.");
                             playerWallet += EARNING_FOR_ONE_LINE;
                             winCounter++;
                         }
@@ -202,13 +170,13 @@ namespace SlotMachine
                             if (slotMachineArray[i, j] != slotMachineArray[i - 1, j + 1])
                             {
                                 allEqual = false;
-                                Console.WriteLine($"No matching diagonal line!");
+                                Console.WriteLine($"No matching inclining diagonal line!");
                                 break;
                             }
                         }
                         if (allEqual)
                         {
-                            Console.WriteLine("You Won! A diagonal line was a match.");
+                            Console.WriteLine("You Won! Inclining diagonal line was a match.");
                             playerWallet += EARNING_FOR_ONE_LINE;
                             winCounter++;
                         }

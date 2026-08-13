@@ -13,11 +13,16 @@ namespace SlotMachine
             Console.WriteLine("One Game costs 1$. One WIN is considered, that only one matching row counts. \nYou win 1$ and your investment.");
             Console.WriteLine("You also have an option to bet 3$ and play 3 other game modes. \nHigher Risk, Higher Reward!");
         }
+        /// <summary>
+        /// method to let player decide, how much he wants to make a wager
+        /// </summary>
+        /// <param name="balance"></param>
+        /// <returns>size of bet</returns>
         public static int ChooseWager(int balance)
         {
             int bet = 0;
-            const int BET_ONE = 1;
-            const int BET_THREE = 3;
+            const int BET_ONE = 1;  //for only center horizontal game
+            const int BET_THREE = 3;//for all other game modes
             Console.WriteLine("Would you like to insert 1$ or 3$? Press 1 or 3");
             int.TryParse(Console.ReadLine(), out bet);
             //check for wrong input for wager
