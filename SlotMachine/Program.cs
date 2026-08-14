@@ -14,12 +14,13 @@ namespace SlotMachine
             int continueGame = 1;
             int gameMode = 0; //var to choose one of the game modes for 3$ wager
             int prevBalance = 0; //variable to track getting wager back for 3$ game
+            int bet = 0;
 
             UI.PrintWelcomeScreen(Constants.STARTING_CREDITS);
             while (continueGame == 1)
             {
                 UI.ShowCurrentBalance(playerWallet);
-                int bet = UI.ChooseWager(playerWallet);
+                bet = UI.ChooseWager(playerWallet);
                 playerWallet -= bet; //deduct wager from current player balance
                 slotMachineArray = Logic.SpinSlotMachine(); //filling the slot machine array with new values
 
@@ -74,17 +75,8 @@ namespace SlotMachine
                     break;
                 }
                 //ask user to continue game
-                Console.WriteLine("Do you want to continue?\nType 1 for continue,\ntype 0 to end the game.");
-                int.TryParse(Console.ReadLine(), out continueGame);
-                while (continueGame != 1 || continueGame != Constants.END_GAME)
-                {
-                    if (continueGame == 1 || continueGame == Constants.END_GAME)
-                    {
-                        break;
-                    }
-                    Console.WriteLine($"No option found for {continueGame} ! Only press 0 or 1");
-                    int.TryParse(Console.ReadLine(), out continueGame);
-                }
+                continueGame = UI.AskPlayerToContinueGame(continueGame);
+             
                 if (continueGame == Constants.END_GAME)
                 {
                     break;

@@ -93,6 +93,22 @@ namespace SlotMachine
             }
             return chosen_gameMode;
         }
+        public static int AskPlayerToContinueGame(int continueGame)
+        {
+            //ask user to continue game
+            Console.WriteLine("Do you want to continue?\nType 1 for continue,\ntype 0 to end the game.");
+            int.TryParse(Console.ReadLine(), out continueGame);
+            while (continueGame != 1 || continueGame != Constants.END_GAME)
+            {
+                if (continueGame == 1 || continueGame == Constants.END_GAME)
+                {
+                    return continueGame;
+                }
+                Console.WriteLine($"No option found for {continueGame} ! Only press 0 or 1");
+                int.TryParse(Console.ReadLine(), out continueGame);
+            }
+            return continueGame;
+        }
         public static void ShowZeroBalance()
         {
             Console.WriteLine("You are out of credits.");
