@@ -22,23 +22,21 @@ namespace SlotMachine
         public static int ChooseWager(int balance)
         {
             int bet = 0;
-            const int BET_ONE = 1;  //for only center horizontal game
-            const int BET_THREE = 3;//for all other game modes
-            Console.WriteLine("Would you like to insert 1$ or 3$? Press 1 or 3");
+            Console.WriteLine($"Would you like to insert {Constants.BET_ONE}$ or {Constants.BET_THREE}$? Press {Constants.BET_ONE} or {Constants.BET_THREE}");
             int.TryParse(Console.ReadLine(), out bet);
             //check for wrong input for wager
-            while (bet == BET_THREE && balance < BET_THREE)
+            while (bet == Constants.BET_THREE && balance < Constants.BET_THREE)
             {
                 Console.WriteLine($"Not sufficient funds! You only have {balance}$ left. Insert 1$ by pressing 1.");
                 int.TryParse(Console.ReadLine(), out bet);
-                if (bet == BET_ONE)
+                if (bet == Constants.BET_ONE)
                 {
                     return bet;
                 }
             }
-            while (bet != BET_ONE || bet != BET_THREE)
+            while (bet != Constants.BET_ONE || bet != Constants.BET_THREE)
             {
-                if (bet == BET_ONE || bet == BET_THREE)
+                if (bet == Constants.BET_ONE || bet == Constants.BET_THREE)
                 {
                     return bet;
                 }

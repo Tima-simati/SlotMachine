@@ -12,11 +12,6 @@ namespace SlotMachine
             CHOOSE_ALL_VERTICAL = 2,
             CHOOSE_ALL_DIAGONAL = 3,
             CHOOSE_ALL_LINES = 4
-        }
-        //enum gameState
-        //{
-        //    CONTINUE_GAME = 1,
-        //    END_GAME = 0
-        //}
+        }    
     }
 }
